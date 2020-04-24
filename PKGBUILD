@@ -65,7 +65,9 @@ source=(#"https://www.kernel.org/pub/linux/kernel/v5.x/linux-${_basekernel}.tar.
         '0010-bootsplash.patch'
         '0011-bootsplash.patch'
         '0012-bootsplash.patch'
-        '0013-bootsplash.patch')
+        '0013-bootsplash.patch'
+        # OpenRGB patch
+        'OpenRGB.patch::https://gitlab.com/CalcProgrammer1/OpenRGB/-/raw/0c45e26c98d5501ea7e575172e302b3109b3c7f5/OpenRGB.patch')
 sha256sums=('00fd9d00d2822eb53dcfdb92b8141650c592123b8c7cad520cfe4a8a150be284'
             '27b756c28b018b3d858d202231f30726099b184ba165ea9b7edc8113127f0236'
             'bfe52746bfc04114627b6f1e0dd94bc05dd94abe8f6dbee770f78d6116e315e8'
@@ -96,7 +98,8 @@ sha256sums=('00fd9d00d2822eb53dcfdb92b8141650c592123b8c7cad520cfe4a8a150be284'
             'e9f22cbb542591087d2d66dc6dc912b1434330ba3cd13d2df741d869a2c31e89'
             '27471eee564ca3149dd271b0817719b5565a9594dc4d884fe3dc51a5f03832bc'
             '60e295601e4fb33d9bf65f198c54c7eb07c0d1e91e2ad1e0dd6cd6e142cb266d'
-            '035ea4b2a7621054f4560471f45336b981538a40172d8f17285910d4e0e0b3ef')
+            '035ea4b2a7621054f4560471f45336b981538a40172d8f17285910d4e0e0b3ef'
+            'e7d724ac15daf428aa1e6a03737e5c1d040892d55fda8a66897fcac9323f285c')
 prepare() {
   #mv "${srcdir}/linux-stable-rc-${_commit}" "${srcdir}/linux-${_basekernel}"
   mv "${srcdir}/linux-${_commit}" "${srcdir}/linux-${_basekernel}"
@@ -133,7 +136,7 @@ prepare() {
   # https://github.com/vmatare/thinkfan/issues/58
   echo "PATCH: Thinkpad dual fan control"
   patch -Np1 -i "${srcdir}/0005-thinkpad_acpi_dual_fan_control.patch"
-  echo "-------------------------------------------------------------------------------------------------------"  
+  echo "-------------------------------------------------------------------------------------------------------"
   # Add bootsplash - http://lkml.iu.edu/hypermail/linux/kernel/1710.3/01542.html
   echo "PATCH: 0001-bootsplash"
   patch -Np1 -i "${srcdir}/0001-bootsplash.patch"
@@ -200,6 +203,11 @@ prepare() {
   echo "-------------------------------------------------------------------------------------------------------"
   echo "PATCH: vfs-ino"
   patch -Np1 -i "${srcdir}/vfs-ino.patch"
+  echo "-------------------------------------------------------------------------------------------------------"
+
+  # OpenRGB patch for SMBus
+  echo "PATCH: OpenRGB"
+  patch -Np1 -i "${srcdir}/OpenRGB.patch"
   echo "-------------------------------------------------------------------------------------------------------"
 
   if [ "${CARCH}" = "x86_64" ]; then
